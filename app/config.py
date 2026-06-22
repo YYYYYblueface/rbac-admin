@@ -12,13 +12,13 @@ class Settings(BaseSettings):
     DB_HOST: str = "127.0.0.1"
     DB_PORT: int = 3306
     DB_USER: str = "root"
-    DB_PASSWORD: str = "123456"
+    DB_PASSWORD: str = "youpassword"
     DB_NAME: str = "rbac_admin"
 
     # Redis 配置
     REDIS_HOST: str = "127.0.0.1"
     REDIS_PORT: int = 6379
-    REDIS_PASSWORD: str = ""
+    REDIS_PASSWORD: str = "youpassword"
     REDIS_DB: int = 0
 
     # JWT 配置
