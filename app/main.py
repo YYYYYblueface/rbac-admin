@@ -1,6 +1,12 @@
+# -*- coding: utf-8 -*-
+import sys
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
+
+# 修复 Windows 终端 GBK 编码问题
+if sys.platform == "win32":
+    sys.stdout.reconfigure(encoding="utf-8")
 
 from app.api.v1 import auth, menus, permissions, roles, users
 from app.config import settings

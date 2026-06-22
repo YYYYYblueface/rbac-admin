@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from pydantic_settings import BaseSettings
 
 
@@ -47,7 +48,11 @@ class Settings(BaseSettings):
             f"?charset=utf8mb4"
         )
 
-    model_config = {"env_file": ".env", "case_sensitive": True}
+    model_config = {
+        "env_file": ".env",
+        "env_file_encoding": "utf-8",
+        "case_sensitive": True,
+    }
 
 
 settings = Settings()
