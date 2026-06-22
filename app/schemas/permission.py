@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List, Optional
+from typing import Optional
 
 from pydantic import BaseModel, Field
 
@@ -28,8 +28,3 @@ class PermissionResponse(PermissionBase):
     updated_at: Optional[datetime] = None
 
     model_config = {"from_attributes": True}
-
-
-class PermissionListResponse(BaseModel):
-    total: int
-    items: List[PermissionResponse]

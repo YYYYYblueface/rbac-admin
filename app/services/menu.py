@@ -13,16 +13,29 @@ class MenuService:
         result = await db.execute(
             select(Menu).order_by(Menu.sort.asc(), Menu.id.asc())
         )
-        menus = result.scalars().all()
+        menus = list(result.scalars().all())
         return MenuService._build_tree(menus)
 
     @staticmethod
-    def _build_tree(menus: List[Menu], parent_id: Optional[int] = None) -> List[Menu]:
+    def _build_tree(menus: List[Menu], parent_id: Optional[int] = None) -> list:
+        """构建树形结构，返回新的 dict 列表"""
         tree = []
         for menu in menus:
             if menu.parent_id == parent_id:
-                menu.children = MenuService._build_tree(menus, menu.id)
-                tree.append(menu)
+                item = {
+                    "id": menu.id,
+                    "parent_id": menu.parent_id,
+                    "name": menu.name,
+                    "path": menu.path,
+                    "component": menu.component,
+                    "icon": menu.icon,
+                    "sort": menu.sort,
+                    "status": menu.status.value if menu.status else None,
+                    "children": MenuService._build_tree(menus, menu.id),
+                    "created_at": menu.created_at.isoformat() if menu.created_at else None,
+                    "updated_at": menu.updated_at.isoformat() if menu.updated_at else None,
+                }
+                tree.append(item)
         return tree
 
     @staticmethod

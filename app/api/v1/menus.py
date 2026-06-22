@@ -6,7 +6,7 @@ from app.dependencies import get_current_user, require_permission
 from app.models.user import User
 from app.schemas.menu import MenuCreate, MenuUpdate
 from app.services.menu import MenuService
-from app.utils.response import fail, success
+from app.utils.response import fail, serialize, success
 
 router = APIRouter(prefix="/menus", tags=["菜单管理"])
 
@@ -18,7 +18,7 @@ async def get_menu_tree(
 ):
     """获取菜单树（所有登录用户可访问）"""
     menus = await MenuService.get_tree(db)
-    return success(data=menus)
+    return success(data=serialize(menus))
 
 
 @router.get("/{menu_id}", response_model=dict)
@@ -31,7 +31,7 @@ async def get_menu(
     menu = await MenuService.get_by_id(db, menu_id)
     if menu is None:
         return fail(code=404, message="菜单不存在")
-    return success(data=menu)
+    return success(data=serialize(menu))
 
 
 @router.post("", response_model=dict)
@@ -43,7 +43,7 @@ async def create_menu(
 ):
     try:
         menu = await MenuService.create(db, data)
-        return success(data=menu, message="创建成功")
+        return success(data=serialize(menu), message="创建成功")
     except ValueError as e:
         return fail(code=400, message=str(e))
 
@@ -58,7 +58,7 @@ async def update_menu(
 ):
     try:
         menu = await MenuService.update(db, menu_id, data)
-        return success(data=menu, message="更新成功")
+        return success(data=serialize(menu), message="更新成功")
     except ValueError as e:
         return fail(code=400, message=str(e))
 

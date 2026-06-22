@@ -33,8 +33,3 @@ class RoleResponse(RoleBase):
     menu_ids: List[int] = []
 
     model_config = {"from_attributes": True}
-
-
-class RoleListResponse(BaseModel):
-    total: int
-    items: List[RoleResponse]

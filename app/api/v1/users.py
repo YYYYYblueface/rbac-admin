@@ -6,7 +6,7 @@ from app.dependencies import get_current_user, require_permission
 from app.models.user import User
 from app.schemas.user import UserCreate, UserUpdate
 from app.services.user import UserService
-from app.utils.response import fail, success
+from app.utils.response import fail, serialize, success
 
 router = APIRouter(prefix="/users", tags=["用户管理"])
 
@@ -22,7 +22,7 @@ async def get_users(
     _: bool = Depends(require_permission(["user:list"])),
 ):
     result = await UserService.get_list(db, page, page_size, username, status)
-    return success(data=result)
+    return success(data=serialize(result))
 
 
 @router.get("/{user_id}", response_model=dict)
@@ -35,7 +35,7 @@ async def get_user(
     user = await UserService.get_by_id(db, user_id)
     if user is None:
         return fail(code=404, message="用户不存在")
-    return success(data=user)
+    return success(data=serialize(user))
 
 
 @router.post("", response_model=dict)
@@ -47,7 +47,7 @@ async def create_user(
 ):
     try:
         user = await UserService.create(db, data)
-        return success(data=user, message="创建成功")
+        return success(data=serialize(user), message="创建成功")
     except ValueError as e:
         return fail(code=400, message=str(e))
 
@@ -62,7 +62,7 @@ async def update_user(
 ):
     try:
         user = await UserService.update(db, user_id, data)
-        return success(data=user, message="更新成功")
+        return success(data=serialize(user), message="更新成功")
     except ValueError as e:
         return fail(code=400, message=str(e))
 

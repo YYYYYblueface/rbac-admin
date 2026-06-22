@@ -1,5 +1,7 @@
+from __future__ import annotations
+
 from datetime import datetime
-from typing import List, Optional
+from typing import Any, List, Optional
 
 from pydantic import BaseModel, EmailStr, Field
 
@@ -33,11 +35,6 @@ class UserResponse(UserBase):
     id: int
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
-    roles: list = []
+    roles: List[dict[str, Any]] = []
 
     model_config = {"from_attributes": True}
-
-
-class UserListResponse(BaseModel):
-    total: int
-    items: List[UserResponse]

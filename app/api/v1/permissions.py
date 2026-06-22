@@ -6,7 +6,7 @@ from app.dependencies import get_current_user, require_permission
 from app.models.user import User
 from app.schemas.permission import PermissionCreate, PermissionUpdate
 from app.services.permission import PermissionService
-from app.utils.response import fail, success
+from app.utils.response import fail, serialize, success
 
 router = APIRouter(prefix="/permissions", tags=["权限管理"])
 
@@ -21,7 +21,7 @@ async def get_permissions(
     _: bool = Depends(require_permission(["perm:list"])),
 ):
     result = await PermissionService.get_list(db, page, page_size, name)
-    return success(data=result)
+    return success(data=serialize(result))
 
 
 @router.get("/{perm_id}", response_model=dict)
@@ -34,7 +34,7 @@ async def get_permission(
     perm = await PermissionService.get_by_id(db, perm_id)
     if perm is None:
         return fail(code=404, message="权限不存在")
-    return success(data=perm)
+    return success(data=serialize(perm))
 
 
 @router.post("", response_model=dict)
@@ -46,7 +46,7 @@ async def create_permission(
 ):
     try:
         perm = await PermissionService.create(db, data)
-        return success(data=perm, message="创建成功")
+        return success(data=serialize(perm), message="创建成功")
     except ValueError as e:
         return fail(code=400, message=str(e))
 
@@ -61,7 +61,7 @@ async def update_permission(
 ):
     try:
         perm = await PermissionService.update(db, perm_id, data)
-        return success(data=perm, message="更新成功")
+        return success(data=serialize(perm), message="更新成功")
     except ValueError as e:
         return fail(code=400, message=str(e))
 

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from datetime import datetime
 from typing import List, Optional
 
@@ -35,7 +37,3 @@ class MenuResponse(MenuBase):
     children: List["MenuResponse"] = []
 
     model_config = {"from_attributes": True}
-
-
-class MenuTreeResponse(BaseModel):
-    items: List[MenuResponse]
