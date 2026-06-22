@@ -5,17 +5,15 @@
 """
 import asyncio
 import sys
+from copy import deepcopy
+from pathlib import Path
 
-sys.path.insert(0, ".")
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import engine, async_session_factory, Base
-from app.models.user import User
-from app.models.role import Role
-from app.models.permission import Permission
-from app.models.menu import Menu
+from app.models import Menu, Permission, Role, User
 from app.utils.security import hash_password
 
 
@@ -73,7 +71,7 @@ async def init_db():
 
         # 创建菜单
         menus = []
-        for menu_data in DEFAULT_MENUS:
+        for menu_data in deepcopy(DEFAULT_MENUS):
             children = menu_data.pop("children", [])
             menu = Menu(**menu_data, status="active")
             db.add(menu)
